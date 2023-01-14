@@ -2,6 +2,8 @@
 using System.Threading;
 using static System.Formats.Asn1.AsnWriter;
 using System.Xml.Linq;
+using System.Speech.Synthesis;
+using System.Threading.Channels;
 
 class Snake
 {
@@ -13,11 +15,33 @@ class Snake
         List<Tuple<int, int>> snake = new List<Tuple<int, int>>();
         snake.Add(new Tuple<int, int>(x, y));
         char input;
+        SpeechSynthesizer synth = new SpeechSynthesizer();
 
+        Anfang:
+        Console.Clear();
+        Console.WriteLine("----------Menü----------");
+        Console.WriteLine("1. Statistiken");
+        Console.WriteLine("2. Spiel starten");
+        Console.WriteLine("3. Programm beenden");
+        Console.WriteLine("(Geben Sie eine Zahl ein!)");
+        Console.WriteLine("------------------------");
+        Console.Write("> ");
+        int menu = Convert.ToInt32(Console.ReadLine());
+
+        if(menu == 1)
+        {
+            Console.WriteLine("Cooming soon...\n");
+            Thread.Sleep(1000);
+
+            Console.WriteLine("Bitte drücken Sie ENTER um ins Menü zu gelangen!");
+            Console.ReadKey();
+            goto Anfang;
+
+        }
+        if (menu == 2)
+        {
         while (true)
         {
-            
-
             Console.Clear(); // Löscht den Bildschirm
             Console.SetCursorPosition(x, y); // Setzt die Cursorposition
             Console.Write("O"); // Zeichnet den Schlangenkopf
@@ -36,8 +60,10 @@ class Snake
             if (x <= 0 || x >= Console.WindowWidth || y <= 0 || y >= Console.WindowHeight || snake.Contains(new Tuple<int, int>(x, y)))
             {
                 Console.Clear();
-                Console.WriteLine("Game Over! Your score is: " + score);
-                Console.WriteLine("Press R to restart or Q to quit");
+                Console.Beep(330, 500);
+                synth.Speak("Game over");
+                Console.WriteLine("Game Over! Dein score ist: " + score);
+                Console.WriteLine("Drücke R um neuzustarten\n Q um das Spiel zu beenden\n M um wieder ins Menü zu gelangen");
                 input = Console.ReadKey().KeyChar;
                 if (input == 'r')
                 {
@@ -53,16 +79,24 @@ class Snake
                 {
                     break;
                 }
+                else if(input == 'm')
+                    {
+                        goto Anfang;
+                    }
             }
 
             // Überprüft, ob die Schlange das Futter gefressen hat
             if (x == foodX && y == foodY)
             {
                 foodX = new Random().Next(0, Console.WindowWidth); // Generiert eine neue x-Position für das Futter
-                foodY = new Random().Next(0, Console.WindowHeight); // Generiert eine neue y-Position für das Futter
+                foodY = new Random().Next(1, Console.WindowHeight); // Generiert eine neue y-Position für das Futter
             }
 
             Thread.Sleep(100); // Wartet 100 Millisekunden
+        }
+        }else if(menu == 3){
+            Console.WriteLine("Spiel wird beendet!");
+            Environment.Exit(0);
         }
     }
 }
