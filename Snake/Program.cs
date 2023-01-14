@@ -28,7 +28,7 @@ class Snake
             else if (input == 's') y++; // runter
             else if (input == 'a') x--; // links
             else if (input == 'd') x++; // rechts
-            else if (input == 'r')
+            else if (input == 'r') // reset
             {
                 x = 10;
                 y = 10;
@@ -39,7 +39,7 @@ class Snake
                 snake.Add(new Tuple<int, int>(x, y));
                 continue;
             }
-            else if (input == 'q') break;
+            else if (input == 'q') break; // Spiel beenden
 
             // Überprüft, ob die Schlange das Futter gefressen hat
             if (x == foodX && y == foodY)
