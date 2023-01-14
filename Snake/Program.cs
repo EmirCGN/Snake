@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading;
+using static System.Formats.Asn1.AsnWriter;
+using System.Xml.Linq;
 
 class Snake
 {
@@ -7,6 +9,9 @@ class Snake
     {
         int x = 10, y = 10; // Startposition des Schlangenkopfs
         int foodX = 15, foodY = 15; // Startposition des Futters
+        int score = 0;
+        List<Tuple<int, int>> snake = new List<Tuple<int, int>>();
+        snake.Add(new Tuple<int, int>(x, y));
         char input;
 
         while (true)
@@ -19,10 +24,22 @@ class Snake
 
             input = Console.ReadKey().KeyChar; // Liest die Tasteneingabe
 
-            if (input == 'w') y--; // Bewegt die Schlange nach oben
-            else if (input == 's') y++; // Bewegt die Schlange nach unten
-            else if (input == 'a') x--; // Bewegt die Schlange nach links
-            else if (input == 'd') x++; // Bewegt die Schlange nach rechts
+            if (input == 'w') y--; // hoch
+            else if (input == 's') y++; // runter
+            else if (input == 'a') x--; // links
+            else if (input == 'd') x++; // rechts
+            else if (input == 'r')
+            {
+                x = 10;
+                y = 10;
+                foodX = 15;
+                foodY = 15;
+                score = 0;
+                snake = new List<Tuple<int, int>>();
+                snake.Add(new Tuple<int, int>(x, y));
+                continue;
+            }
+            else if (input == 'q') break;
 
             // Überprüft, ob die Schlange das Futter gefressen hat
             if (x == foodX && y == foodY)
