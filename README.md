@@ -6,7 +6,6 @@ Das Ziel des Spiels ist es, die Schlange durch das Essen zu steuern, das auf dem
 
 ## Steuerung
 - Verwenden Sie die Tasten W, A, S und D, um die Schlange nach oben, links, unten und rechts zu steuern.
-- Drücken Sie die Taste P, um das Spiel pausieren.
 - Drücken Sie die Taste R, um das Spiel zurückzusetzen.
 - Drücken Sie die Taste Q, um das Spiel zu beenden. 
 
