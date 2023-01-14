@@ -16,11 +16,16 @@ class Snake
 
         while (true)
         {
+            
+
             Console.Clear(); // Löscht den Bildschirm
             Console.SetCursorPosition(x, y); // Setzt die Cursorposition
             Console.Write("O"); // Zeichnet den Schlangenkopf
             Console.SetCursorPosition(foodX, foodY); // Setzt die Cursorposition
             Console.Write("X"); // Zeichnet das Futter
+            Console.SetCursorPosition(0, 0); // Setzt die Cursorposition
+            Console.Write("Score: " + score); // Zeigt die Punktzahl an
+
 
             input = Console.ReadKey().KeyChar; // Liest die Tasteneingabe
 
@@ -28,18 +33,27 @@ class Snake
             else if (input == 's') y++; // runter
             else if (input == 'a') x--; // links
             else if (input == 'd') x++; // rechts
-            else if (input == 'r') // reset
+            if (x <= 0 || x >= Console.WindowWidth || y <= 0 || y >= Console.WindowHeight || snake.Contains(new Tuple<int, int>(x, y)))
             {
-                x = 10;
-                y = 10;
-                foodX = 15;
-                foodY = 15;
-                score = 0;
-                snake = new List<Tuple<int, int>>();
-                snake.Add(new Tuple<int, int>(x, y));
-                continue;
+                Console.Clear();
+                Console.WriteLine("Game Over! Your score is: " + score);
+                Console.WriteLine("Press R to restart or Q to quit");
+                input = Console.ReadKey().KeyChar;
+                if (input == 'r')
+                {
+                    x = 10;
+                    y = 10;
+                    foodX = 15;
+                    foodY = 15;
+                    score = 0;
+                    snake.Clear();
+                    snake.Add(new Tuple<int, int>(x, y));
+                }
+                else if (input == 'q')
+                {
+                    break;
+                }
             }
-            else if (input == 'q') break; // Spiel beenden
 
             // Überprüft, ob die Schlange das Futter gefressen hat
             if (x == foodX && y == foodY)
