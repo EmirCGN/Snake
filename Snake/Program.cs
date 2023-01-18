@@ -28,6 +28,7 @@ class Snake
         Console.Write("> ");
         int menu = Convert.ToInt32(Console.ReadLine());
 
+
         if(menu == 1)
         {
             Console.WriteLine("Cooming soon...\n");
@@ -51,7 +52,7 @@ class Snake
             Console.Write("Score: " + score); // Zeigt die Punktzahl an
 
 
-            input = Console.ReadKey().KeyChar; // Liest die Tasteneingabe
+            input = Console.ReadKey(true).KeyChar; // Liest die Tasteneingabe
 
             if (input == 'w') y--; // hoch
             else if (input == 's') y++; // runter
@@ -64,7 +65,7 @@ class Snake
                 synth.Speak("Game over");
                 Console.WriteLine("Game Over! Dein score ist: " + score);
                 Console.WriteLine("Drücke R um neuzustarten\n Q um das Spiel zu beenden\n M um wieder ins Menü zu gelangen");
-                input = Console.ReadKey().KeyChar;
+                input = Console.ReadKey(true).KeyChar;
                 if (input == 'r')
                 {
                     x = 10;
