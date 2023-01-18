@@ -29,7 +29,7 @@ class Snake
         int menu = Convert.ToInt32(Console.ReadLine());
 
 
-        if(menu == 1)
+        if (menu == 1)
         {
             Console.WriteLine("Cooming soon...\n");
             Thread.Sleep(1000);
@@ -90,7 +90,8 @@ class Snake
             if (x == foodX && y == foodY)
             {
                 foodX = new Random().Next(0, Console.WindowWidth); // Generiert eine neue x-Position für das Futter
-                foodY = new Random().Next(1, Console.WindowHeight); // Generiert eine neue y-Position für das Futter
+                foodY = new Random().Next(1, Console.WindowHeight);// Generiert eine neue y-Position für das Futter
+                    score++;
             }
 
             Thread.Sleep(100); // Wartet 100 Millisekunden
