@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading;
-using static System.Formats.Asn1.AsnWriter;
-using System.Xml.Linq;
-using System.Speech.Synthesis;
-using System.Threading.Channels;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Media;
 
 class Snake
 {
@@ -17,96 +15,106 @@ class Snake
         List<Tuple<int, int>> snake = new List<Tuple<int, int>>();
         snake.Add(new Tuple<int, int>(x, y));
         char input;
-        SpeechSynthesizer synth = new SpeechSynthesizer();
+        SoundPlayer eatSound = new SoundPlayer("eat.wav");
+        SoundPlayer gameOverSound = new SoundPlayer("gameover.wav");
 
-        Anfang:
-        Console.Clear();
-        Console.WriteLine("----------Menü----------");
-        Console.WriteLine("1. Statistiken");
-        Console.WriteLine("2. Spiel starten");
-        Console.WriteLine("3. Programm beenden");
-        Console.WriteLine("(Geben Sie eine Zahl ein!)");
-        Console.WriteLine("------------------------");
-        Console.Write("> ");
-        int menu = Convert.ToInt32(Console.ReadLine());
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.CursorVisible = false;
 
+        bool running = true;
 
-        if (menu == 1)
+        while (running)
         {
-            Console.WriteLine("Score: " + score);
-            Console.WriteLine("Überlebende Zeit: {0}\n", time.Elapsed);
-            Thread.Sleep(1000);
+            Console.Clear();
+            Console.WriteLine("----------Menü----------");
+            Console.WriteLine("1. Statistiken");
+            Console.WriteLine("2. Spiel starten");
+            Console.WriteLine("3. Programm beenden");
+            Console.WriteLine("(Geben Sie eine Zahl ein!)");
+            Console.WriteLine("------------------------");
+            Console.Write("> ");
+            int menu = Convert.ToInt32(Console.ReadLine());
 
-            Console.WriteLine("Bitte drücken Sie ENTER um ins Menü zu gelangen!");
-            Console.ReadKey();
-            goto Anfang;
-
-        }
-        if (menu == 2)
-        {
-            time.Start();
-        while (true)
-        {
-            Console.Clear(); // Löscht den Bildschirm
-            Console.SetCursorPosition(x, y); // Setzt die Cursorposition
-            Console.Write("O"); // Zeichnet den Schlangenkopf
-            Console.SetCursorPosition(foodX, foodY); // Setzt die Cursorposition
-            Console.Write("X"); // Zeichnet das Futter
-            Console.SetCursorPosition(0, 0); // Setzt die Cursorposition
-            Console.Write("Score:{0}        Time:{1}",score,time.Elapsed); // Zeigt die Punktzahl und wie lange man überlebt hat an
-
-
-            input = Console.ReadKey(true).KeyChar; // Liest die Tasteneingabe
-
-            if (input == 'w') y--; // hoch
-            else if (input == 's') y++; // runter
-            else if (input == 'a') x--; // links
-            else if (input == 'd') x++; // rechts
-            if (x <= 0 || x >= Console.WindowWidth || y <= 0 || y >= Console.WindowHeight || snake.Contains(new Tuple<int, int>(x, y))) // Man kann nicht über die Borderline gehen mit der Schlange
+            switch (menu)
             {
-                Console.Clear();
-                Console.Beep(330, 500);
-                synth.Speak("Game over");
-                Console.WriteLine("Game Over! Dein score ist: " + score);
-                Console.WriteLine("Drücke R um neuzustarten\n Drücke Q um das Spiel zu beenden\n Drücke M um wieder ins Menü zu gelangen");
-                input = Console.ReadKey(true).KeyChar;
-                if (input == 'r') // Startet das Spiel neu
-                {
-                        time.Stop();
-                        time.Reset();
-                        x = 10;
-                        y = 10;
-                        foodX = 15;
-                        foodY = 15;
-                        score = 0;
-                        snake.Clear();
-                        snake.Add(new Tuple<int, int>(x, y));
-                }
-                else if (input == 'q') // Beendet das Programm
-                    {
-                        time.Stop();
-                        break;
-                    }
-                else if(input == 'm') // Bringt zurück ins Menü
-                    {
-                        time.Stop();
-                        goto Anfang;
-                    }
-            }
+                case 1:
+                    Console.WriteLine("Score: " + score);
+                    Console.WriteLine("Überlebende Zeit: {0}\n", time.Elapsed);
+                    Thread.Sleep(1000);
 
-            // Überprüft, ob die Schlange das Futter gefressen hat
-            if (x == foodX && y == foodY)
-            {
-                foodX = new Random().Next(0, Console.WindowWidth); // Generiert eine neue x-Position für das Futter
-                foodY = new Random().Next(1, Console.WindowHeight);// Generiert eine neue y-Position für das Futter
-                score++;
-            }
+                    Console.WriteLine("Bitte drücken Sie ENTER um ins Menü zu gelangen!");
+                    Console.ReadKey();
+                    break;
+                case 2:
+                    time.Start();
+                    x = 10;
+                    y = 10;
+                    foodX = 15;
+                    foodY = 15;
+                    score = 0;
+                    snake.Clear();
+                    snake.Add(new Tuple<int, int>(x, y));
 
-            Thread.Sleep(100); // Wartet 100 Millisekunden
+                    while (true)
+                    {
+                        Console.Clear();
+                        Console.SetCursorPosition(x, y);
+                        Console.Write("█");
+                        Console.SetCursorPosition(foodX, foodY);
+                        Console.Write("■");
+                        Console.SetCursorPosition(0, 0);
+                        Console.Write("Score:{0}        Time:{1}", score, time.Elapsed);
+
+                        input = Console.ReadKey(true).KeyChar;
+
+                        if (input == 'w') y--;
+                        else if (input == 's') y++;
+                        else if (input == 'a') x--;
+                        else if (input == 'd') x++;
+
+                        if (x <= 0 || x >= Console.WindowWidth || y <= 0 || y >= Console.WindowHeight || snake.Contains(new Tuple<int, int>(x, y)))
+                        {
+                            Console.Clear();
+                            Console.Beep(330, 500);
+                            gameOverSound.Play();
+                            Console.WriteLine("Game Over! Dein Score ist: " + score);
+                            Console.WriteLine("Drücke R um neuzustarten\n Drücke Q um das Spiel zu beenden\n Drücke M um wieder ins Menü zu gelangen");
+                            input = Console.ReadKey(true).KeyChar;
+                            if (input == 'r')
+                                break;
+                            else if (input == 'q')
+                            {
+                                running = false;
+                                break;
+                            }
+                            else if (input == 'm')
+                                break;
+                        }
+
+                        if (x == foodX && y == foodY)
+                        {
+                            eatSound.Play();
+                            foodX = new Random().Next(1, Console.WindowWidth);
+                            foodY = new Random().Next(1, Console.WindowHeight);
+                            score++;
+                        }
+
+                        Thread.Sleep(100);
+                    }
+
+                    time.Stop();
+                    break;
+                case 3:
+                    running = false;
+                    break;
+                default:
+                    Console.WriteLine("Ungültige Auswahl. Bitte geben Sie eine gültige Zahl ein.");
+                    Thread.Sleep(1000);
+                    break;
+            }
         }
-        }else if(menu == 3){
-            Console.WriteLine("Spiel wird beendet!");
-            Environment.Exit(0);
-        }
+
+        Console.WriteLine("Spiel wird beendet!");
+        Console.ReadLine();
     }
 }
