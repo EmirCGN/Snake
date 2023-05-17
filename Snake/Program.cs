@@ -10,6 +10,8 @@ namespace Snake
     {
         static void Main(string[] args)
         {
+            Console.Title = "SnakeGame - EmirCGN";
+
             Game game = new Game();
             game.Run();
         }

@@ -29,14 +29,20 @@ namespace Snake
 
         public void Generate()
         {
-            x = new Random().Next(1, Console.WindowWidth);
-            y = new Random().Next(1, Console.WindowHeight);
+            // Generiere zufällige Koordinaten innerhalb des Konsolenfensters
+            int windowWidth = Console.WindowWidth - 1;
+            int windowHeight = Console.WindowHeight - 1;
+            x = new Random().Next(1, windowWidth);
+            y = new Random().Next(1, windowHeight);
         }
 
         public void Draw()
         {
+            // Setze die Position des Cursors und zeichne das Food-Symbol
             Console.SetCursorPosition(x, y);
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.Write("■");
+            Console.ResetColor();
         }
     }
 }
